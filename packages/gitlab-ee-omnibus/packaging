@@ -1,0 +1,20 @@
+# abort script on any command that exits with a non zero value
+set -xe
+set -o pipefail
+
+# extract debian archive and then
+dpkg -x gitlab-ee-omnibus/gitlab-ee_8.5.12-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
+
+# this patch is required for gitlab-shell to properly create authorized_keys
+# otherwise the authorized_keys gitlab-shell command points to /var/vcap/data/packages/gitlab-ee-omnibus/...,
+# because the File.expand_path is used to resolve the gitlab-shell directory
+# this happens, because we use /opt/gitlab symlink to /var/vcap/packages/gitlab-ee-omnibus
+patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_gitlab_shell_path.patch
+
+RUNIT_RECIPE="${BOSH_INSTALL_TARGET}/opt/gitlab/embedded/cookbooks/runit/recipes/default.rb"
+if [[ ! -e $RUNIT_RECIPE ]]; then
+  echo "WARNING: Missing file $RUNIT_RECIPE."
+  exit 1
+fi
+
+echo > $RUNIT_RECIPE

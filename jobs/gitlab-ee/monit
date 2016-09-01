@@ -1,0 +1,29 @@
+check process gitlab-ee-runsvdir with pidfile /var/vcap/sys/run/gitlab-runsvdir.pid
+  start program = "/var/vcap/jobs/gitlab-ee/bin/gitlab-ee-runsvdir start"
+  stop program = "/var/vcap/jobs/gitlab-ee/bin/gitlab-ee-runsvdir stop"
+  group vcap
+
+check file gitlab-ee-initialize with path /var/vcap/jobs/gitlab-ee/initialized
+  start program "/usr/bin/flock /var/vcap/sys/run/gitlab-ee-initialize.lock /var/vcap/jobs/gitlab-ee/bin/gitlab-ee-initialize"
+  group vcap
+
+check process gitlab-sshd with pidfile /var/vcap/sys/run/gitlab-sshd.pid
+  start program "/var/vcap/jobs/gitlab-ee/bin/sshd_ctl start"
+  stop program "/var/vcap/jobs/gitlab-ee/bin/sshd_ctl stop"
+  group vcap
+
+check process gitlab-nginx with pidfile /opt/gitlab/service/nginx/supervise/pid
+
+check process gitlab-logrotate with pidfile /opt/gitlab/service/logrotate/supervise/pid
+
+check process gitlab-sidekiq with pidfile /opt/gitlab/service/sidekiq/supervise/pid
+
+check process gitlab-unicorn with pidfile /opt/gitlab/service/unicorn/supervise/pid
+
+check process gitlab-workhorse with pidfile /opt/gitlab/service/gitlab-workhorse/supervise/pid
+
+check process route-registrar
+  with pidfile /var/vcap/sys/run/route-registrar.pid
+  start program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl stop" with timeout 10 seconds
+  group vcap

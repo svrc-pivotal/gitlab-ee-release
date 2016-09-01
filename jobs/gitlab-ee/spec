@@ -1,0 +1,97 @@
+---
+name: gitlab-ee
+
+templates:
+  gitlab-ee-runsvdir.erb: bin/gitlab-ee-runsvdir
+  gitlab-ee-initialize.erb: bin/gitlab-ee-initialize
+  gitlab-ee-db-setup.erb: bin/gitlab-ee-db-setup
+  gitlab-ee-common.erb: config/gitlab-ee-common
+  gitlab.rb.erb: config/gitlab.rb
+
+  ssh_host_rsa_key.erb: config/ssh_host_rsa_key
+  sshd_config.erb: config/sshd_config
+  sshd_ctl.erb: bin/sshd_ctl
+
+  route-registrar_ctl: bin/route-registrar_ctl
+  registrar_settings.yml.erb: config/registrar_settings.yml
+
+packages:
+  - gitlab-ee-omnibus
+  - route-registrar
+
+properties:
+  gitlab-ee.network:
+    description: The name of the network which the gitlab node runs on
+  gitlab-ee.route_name:
+    description: The name of the route
+    default: gitlab
+  gitlab-ee.email_from:
+    description: Email address used in the "From" field in mails sent by GitLab
+  gitlab-ee.email_reply_to:
+    description: Email address used in the "Reply-To" field in mails sent by GitLab
+  gitlab-ee.email_display_name:
+    description: Display name for mails sent by GitLab
+  gitlab-ee.ssh.host_rsa_key:
+    description: SSH Host Key for accessing GitLab instance
+  gitlab-ee.ssh.port:
+    description: SSH port to expose
+    default: 2222
+  gitlab-ee.nfs.mount_point:
+    description: "Location to mount the nfs share"
+    default: "/var/vcap/nfs"
+
+  smtp.address:
+    description: Mail server address
+  smtp.port:
+    description: Mail server port
+    default: 25
+  smtp.user_name:
+    description: Mail server username
+  smtp.password:
+    description: Mail server password
+  smtp.domain:
+    description: Mail server domain (e.g. example.org)
+  smtp.authentication:
+    description: Mail server authentication type (plain, login or cram_md5)
+    default: login
+  smtp.tls:
+    description: Enable TLS for mail server
+    default: false
+
+  redis.host:
+    description: The host to connect to for redis.
+  redis.port:
+    description: The port to connect to for redis.
+  redis.password:
+    description: The password for connecting to redis.
+
+  database.name:
+    default: gitlabhq_production
+    description: The database name.
+  database.encoding:
+    default: utf8
+    description: The database encoding e.g 'utf8' for mysql or 'unicode' for postgres.
+  database.host:
+    description: The host to connect to for database.
+  database.port:
+    default: 3306
+    description: The port to connect to for database.
+  database.username:
+    default: gitlab
+    description: The username for connecting to database.
+  database.password:
+    description: The password for connecting to database.
+  database.adapter:
+    default: mysql2
+    description: The rails adapter to use when connecting e.g mysql2 / postgresql.
+
+  cf.apps_domain:
+    description: Domain shared by the UAA and CF API eg '10.244.0.34.xip.io'
+  cf.nats.host:
+    description: Hostname/IP of NATS
+  cf.nats.port:
+    description: Port that NATS listens on
+  cf.nats.username:
+    description: The user to use when authenticating with NATS
+  cf.nats.password:
+    description: The password to use when authenticating with NATS

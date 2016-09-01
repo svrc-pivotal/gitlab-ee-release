@@ -1,0 +1,13 @@
+---
+debian_nfs_server/nfs-kernel-server_1.2.5-3ubuntu3_amd64.deb:
+  object_id: 6bbb5b7a-4501-4afa-9a70-7e6dd2c92be2
+  sha: 65457bbeda336dc4b710cd68f71e9dd218fdf594
+  size: 124348
+gitlab-ee-omnibus/gitlab-ee_8.5.12-ee.0_amd64.deb:
+  object_id: f7dec031-e0eb-4230-b6be-88f131b2a5fb
+  sha: 63957d1190f4951bff9387046f9415b502a18060
+  size: 300774272
+go/go1.4.1.linux-amd64.tar.gz:
+  object_id: fcf24fb5-3d51-4f13-9973-e8e195d71dbf
+  sha: 3e871200e13c0b059b14866d428910de0a4c51ed
+  size: 62402109

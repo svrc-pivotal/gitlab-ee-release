@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -ex
+
+source /var/vcap/jobs/gitlab-ee/config/gitlab-ee-common
+
+exec 1>>$LOG_DIR/gitlab-ee-initialize.log
+exec 2>&1
+
+#####################
+# Script starts here
+#####################
+
+# Check if gitlab got configured
+if [[ -e $MONITOR_FILE ]]; then
+  echo "GitLab-ee is already configured. If you want to force it do: 'rm $MONITOR_FILE; monit restart all'."
+  exit 0
+fi
+
+# Check if the NFS mounted
+if ! grep -qs '/var/vcap/nfs' /proc/mounts; then
+    echo "nfs not yet mounted"
+    exit 1
+fi
+
+# Create link from /opt/gitlab to /var/vcap/packages/gitlab-ee-omnibus
+if [[ ! -f "$OPT_DIR/version-manifest.txt" ]]; then
+	rm "$OPT_DIR" || true
+	ln -ns "$OMNIBUS_PACKAGE" "$OPT_DIR"
+fi
+
+mkdir -p /var/vcap/nfs/shared/etc/gitlab
+
+## Upgrade requires deleting /etc/gitlab if not already a symlink
+if [ -d /etc/gitlab ] && [ ! -L /etc/gitlab ] ; then
+  cp /etc/gitlab/gitlab-secrets.json /var/vcap/nfs/shared/etc/gitlab/
+  rm -rf /etc/gitlab
+fi
+
+ln -sf /var/vcap/nfs/shared/etc/gitlab /etc/
+cp $GITLAB_JOB_DIR/config/gitlab.rb /etc/gitlab/gitlab.rb
+chmod 600 /etc/gitlab/gitlab.rb
+
+# Always try to create the database
+/opt/gitlab/embedded/bin/mysql "--host=<%= p('database.host') %>" "--port=<%= p('database.port') %>" "--user=<%= p('database.username') %>" "--password=<%= p('database.password') %>" -e 'CREATE DATABASE IF NOT EXISTS `<%= p('database.name') %>`'
+
+# Create directory where reconfigure logs are stored
+mkdir -p /var/log/gitlab/reconfigure/
+
+# Reconfigure GitLab (it can initialize database)
+$OPT_DIR/bin/gitlab-ctl reconfigure
+
+# Setup the GitLab DB
+/usr/bin/flock /var/vcap/nfs/shared/gitlab-ee-db-setup.lock $GITLAB_JOB_DIR/bin/gitlab-ee-db-setup
+
+# Always restart GitLab to load a updated DB scheme
+$OPT_DIR/bin/gitlab-ctl restart
+
+# Make sure GitLab is available
+curl --retry 60 --retry-delay 5 --retry-max-time 300 'http://localhost'
+
+touch $MONITOR_FILE

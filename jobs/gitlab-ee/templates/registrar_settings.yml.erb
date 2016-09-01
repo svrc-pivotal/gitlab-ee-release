@@ -1,0 +1,11 @@
+---
+message_bus_servers:
+  - host: <%= p('cf.nats.host') %>:<%= p('cf.nats.port') %>
+    user: <%= p('cf.nats.username') %>
+    password: <%= p('cf.nats.password') %>
+external_host: <%= p('gitlab-ee.route_name') %>.<%= p('cf.apps_domain') %>
+external_ip: <%= spec.networks.send(p('gitlab-ee.network')).ip %>
+port: 80
+health_checker:
+  name: <%= p('gitlab-ee.route_name') %>
+  interval_in_seconds: 10

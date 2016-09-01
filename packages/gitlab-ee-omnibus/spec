@@ -1,0 +1,5 @@
+---
+name: gitlab-ee-omnibus
+
+files:
+  - gitlab-ee-omnibus/gitlab-ee_8.5.12-ee.0_amd64.deb
