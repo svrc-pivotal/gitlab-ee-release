@@ -1,0 +1,49 @@
+---
+packages:
+- name: route-registrar
+  version: 540b1577a1f196d30363a3e501e467d2a62093af
+  fingerprint: 540b1577a1f196d30363a3e501e467d2a62093af
+  sha1: c734b21125e43cc07431c45385a51f1990c2cebe
+  dependencies:
+  - go
+- name: debian_nfs_server
+  version: 6920d37efb8f73b8bc39916909452924d60341a2
+  fingerprint: 6920d37efb8f73b8bc39916909452924d60341a2
+  sha1: 072b305e401803ae55fa1cf5ce54f6d7596a8b44
+  dependencies: []
+- name: go
+  version: 1c91feb55b72e9340a52db974f6d2927b2be225c
+  fingerprint: 1c91feb55b72e9340a52db974f6d2927b2be225c
+  sha1: fcfed23a7d46136794f86451e84dc6808560c186
+  dependencies: []
+- name: common
+  version: 1834244cff7baddb361ea30451c7d2ede3810e0f
+  fingerprint: 1834244cff7baddb361ea30451c7d2ede3810e0f
+  sha1: 3e5f22c7c1a9e8ad6551a91a402be9840c58a3af
+  dependencies: []
+- name: gitlab-ee-omnibus
+  version: 114b6ef93f245fdcfd4da35c4a9edf1e7602fa49
+  fingerprint: 114b6ef93f245fdcfd4da35c4a9edf1e7602fa49
+  sha1: 42ccd83071fad8d9a048586133359888398b0c04
+  dependencies: []
+jobs:
+- name: gitlab-ee
+  version: 46f297b63836999d3e4413b6c0f1229df7c3dbd6
+  fingerprint: 46f297b63836999d3e4413b6c0f1229df7c3dbd6
+  sha1: 05f9e2598f99d580e40e534286a0c27c94ad77be
+- name: file_server
+  version: 4aeddf96d8e912cf30f6a06d0179eea58081c317
+  fingerprint: 4aeddf96d8e912cf30f6a06d0179eea58081c317
+  sha1: 12e800e1a0cf4564437cf5e7c4b4a4ba4ab3b769
+- name: nfs_mounter
+  version: d53f0772b710575f314f22d90c1680291c6ee756
+  fingerprint: d53f0772b710575f314f22d90c1680291c6ee756
+  sha1: 53ffe6e99e2cda3fe03f7356d7ea5237dc99f57b
+license:
+  version: f978201e9cd6abe66ebcc7d85ec23d8124f520fc
+  fingerprint: f978201e9cd6abe66ebcc7d85ec23d8124f520fc
+  sha1: 50c8810d8e18f18989368083740fd0ab6933bb4e
+commit_hash: 04c47dd6
+uncommitted_changes: true
+name: gitlab-ee
+version: 1.1.field1
