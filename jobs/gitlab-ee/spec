@@ -39,6 +39,36 @@ properties:
   gitlab-ee.nfs.mount_point:
     description: "Location to mount the nfs share"
     default: "/var/vcap/nfs"
+  gitlab-ee.ldap.enabled:
+    default: false
+    description: "Enable LDAP login"
+  gitlab-ee.ldap.host:
+    description: "LDAP Hostname"
+  gitlab-ee.ldap.port:
+    description: "LDAP Port"
+  gitlab-ee.ldap.method:
+    description: "One of 'plain', 'tls', or 'ssl'; defaults to plain"
+    default: "plain"
+  gitlab-ee.ldap.uid:
+    description: "The LDAP attribute for a unique user ID, defeaults to sAMAccountName"
+    default: "sAMAccountName"
+  gitlab-ee.ldap.bind_dn:
+    description: "The LDAP user as a DN for binding to the directory"
+  gitlab-ee.ldap.password:
+    description: "The LDAP bind user password"
+  gitlab-ee.ldap.active_directory:
+    description: "Is this active directory? Default true"
+    default: true
+  gitlab-ee.ldap.base:
+    description: "The base DN for searching this directory"
+  gitlab-ee.ldap.user_filter:
+    description: "Optional LDAP user filter, default empty"
+    default: ""
+  gitlab-ee.ldap.group_base:
+    description: "Optional LDAP group base, default empty"
+    default: ""
+
+ 
 
   smtp.address:
     description: Mail server address
