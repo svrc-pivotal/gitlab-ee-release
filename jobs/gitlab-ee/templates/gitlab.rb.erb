@@ -76,7 +76,7 @@ gitlab_rails['incoming_email_log_directory'] = "/var/vcap/sys/log/gitlab/mailroo
 gitlab_rails['artifacts_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/artifacts"
 
 ## Git LFS
-# gitlab_rails['lfs_enabled'] = true
+gitlab_rails['lfs_enabled'] = true
 gitlab_rails['lfs_storage_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/lfs-objects"
 
 ## ElasticSearch (EE only)
@@ -251,6 +251,11 @@ gitlab_rails['uploads_directory'] = "<%= p('gitlab-ee.nfs.mount_point') %>/share
 # Only applicable on inital setup, changing this setting after database is created and seeded
 # won't yield any change.
 # gitlab_rails['initial_root_password'] = "password"
+<% if_p('gitlab-ee.initial_root_password') do %>
+gitlab_rails['initial_root_password'] = "<%= p('gitlab-ee.initial_root_password') %>"
+<% end %>
+
+
 
 ############################
 # GitLab database settings #
@@ -270,6 +275,7 @@ gitlab_rails['db_port'] = "<%= p('database.port') %>".to_i
 gitlab_rails['db_socket'] = nil
 gitlab_rails['db_sslmode'] = nil
 gitlab_rails['db_sslrootcert'] = nil
+gitlab_rails['db_max_allowed_packet'] = "512M"
 
 #########################
 # GitLab redis settings #

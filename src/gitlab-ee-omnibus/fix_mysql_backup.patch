@@ -1,0 +1,10 @@
+--- embedded/service/gitlab-rails/lib/backup/database.rb.backup 2017-03-14 18:11:37.955593100 +0000
++++ embedded/service/gitlab-rails/lib/backup/database.rb        2017-03-14 18:12:12.183593100 +0000
+@@ -71,6 +71,7 @@
+         'host'      => '--host',
+         'port'      => '--port',
+         'socket'    => '--socket',
++        'max_allowed_packet' => '--max_allowed_packet',
+         'username'  => '--user',
+         'encoding'  => '--default-character-set'
+       }

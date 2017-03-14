@@ -36,9 +36,17 @@ properties:
   gitlab-ee.ssh.port:
     description: SSH port to expose
     default: 2222
+
+  gitlab-ee.initial_root_password:
+    description: Initial password for root user. This does not have any affect on upgrade.
+  gitlab-ee.nfs.address:
+    description: IP address or hostname of the remote NFS server
+  gitlab-ee.nfs.share:
+    description: Remote folder path on the NFS server to mount.
   gitlab-ee.nfs.mount_point:
-    description: "Location to mount the nfs share"
+    description: Path to mount NFS
     default: "/var/vcap/nfs"
+
   gitlab-ee.ldap.enabled:
     default: false
     description: "Enable LDAP login"

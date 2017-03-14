@@ -3,13 +3,16 @@ set -xe
 set -o pipefail
 
 # extract debian archive and then
-dpkg -x gitlab-ee-omnibus/gitlab-ee_8.5.12-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
+dpkg -x gitlab-ee-omnibus/gitlab-ee_8.16.7-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 
 # this patch is required for gitlab-shell to properly create authorized_keys
 # otherwise the authorized_keys gitlab-shell command points to /var/vcap/data/packages/gitlab-ee-omnibus/...,
 # because the File.expand_path is used to resolve the gitlab-shell directory
 # this happens, because we use /opt/gitlab symlink to /var/vcap/packages/gitlab-ee-omnibus
 patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_gitlab_shell_path.patch
+
+# this patch is required to workaround https://gitlab.com/gitlab-org/gitlab-ce/issues/29076
+patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_mysql_backup.patch
 
 RUNIT_RECIPE="${BOSH_INSTALL_TARGET}/opt/gitlab/embedded/cookbooks/runit/recipes/default.rb"
 if [[ ! -e $RUNIT_RECIPE ]]; then
