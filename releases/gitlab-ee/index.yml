@@ -4,4 +4,6 @@ builds:
     version: 1.1.field1
   60fdbb86-fd16-4770-b729-55abc9bb0dfd:
     version: 1.1.6.field5
+  3e779003-9e3f-4da3-9a66-922be1560dd4:
+    version: 1.1.7.field1
 format-version: '2'
