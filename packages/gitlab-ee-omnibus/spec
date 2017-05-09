@@ -2,6 +2,6 @@
 name: gitlab-ee-omnibus
 
 files:
-  - gitlab-ee-omnibus/gitlab-ee_8.17.4-ee.0_amd64.deb
+  - gitlab-ee-omnibus/gitlab-ee_9.0.7-ee.0_amd64.deb
   - gitlab-ee-omnibus/fix_gitlab_shell_path.patch
   - gitlab-ee-omnibus/fix_mysql_backup.patch
