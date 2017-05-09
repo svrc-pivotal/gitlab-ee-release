@@ -20,11 +20,15 @@ packages:
   - route-registrar
 
 properties:
+  gitlab-ee.initial_root_password:
+    description: Initial password for root user. This does not have any affect on upgrade.
   gitlab-ee.network:
     description: The name of the network which the gitlab node runs on
   gitlab-ee.route_name:
     description: The name of the route
     default: gitlab
+  gitlab-ee.external_host:
+    description: The host that Gitlab is accessed at
   gitlab-ee.email_from:
     description: Email address used in the "From" field in mails sent by GitLab
   gitlab-ee.email_reply_to:
@@ -37,8 +41,6 @@ properties:
     description: SSH port to expose
     default: 2222
 
-  gitlab-ee.initial_root_password:
-    description: Initial password for root user. This does not have any affect on upgrade.
   gitlab-ee.nfs.address:
     description: IP address or hostname of the remote NFS server
   gitlab-ee.nfs.share:
@@ -46,37 +48,6 @@ properties:
   gitlab-ee.nfs.mount_point:
     description: Path to mount NFS
     default: "/var/vcap/nfs"
-
-  gitlab-ee.ldap.enabled:
-    default: false
-    description: "Enable LDAP login"
-  gitlab-ee.ldap.host:
-    description: "LDAP Hostname"
-  gitlab-ee.ldap.port:
-    description: "LDAP Port"
-  gitlab-ee.ldap.method:
-    description: "One of 'plain', 'tls', or 'ssl'; defaults to plain"
-    default: "plain"
-  gitlab-ee.ldap.uid:
-    description: "The LDAP attribute for a unique user ID, defeaults to sAMAccountName"
-    default: "sAMAccountName"
-  gitlab-ee.ldap.bind_dn:
-    description: "The LDAP user as a DN for binding to the directory"
-  gitlab-ee.ldap.password:
-    description: "The LDAP bind user password"
-  gitlab-ee.ldap.active_directory:
-    description: "Is this active directory? Default true"
-    default: true
-  gitlab-ee.ldap.base:
-    description: "The base DN for searching this directory"
-  gitlab-ee.ldap.user_filter:
-    description: "Optional LDAP user filter, default empty"
-    default: ""
-  gitlab-ee.ldap.group_base:
-    description: "Optional LDAP group base, default empty"
-    default: ""
-
- 
 
   smtp.address:
     description: Mail server address
@@ -122,6 +93,13 @@ properties:
   database.adapter:
     default: mysql2
     description: The rails adapter to use when connecting e.g mysql2 / postgresql.
+
+  ldap.enabled:
+    default: false
+    description: Enable LDAP integration. If `ldap.servers` is empty, this will disable.
+  ldap.servers:
+      default: []
+      description: Array of LDAP server configurations
 
   cf.apps_domain:
     description: Domain shared by the UAA and CF API eg '10.244.0.34.xip.io'
