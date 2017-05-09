@@ -47,6 +47,11 @@ chmod 600 /etc/gitlab/gitlab.rb
 # Create directory where reconfigure logs are stored
 mkdir -p /var/log/gitlab/reconfigure/
 
+# Export GITLAB_ROOT_PASSWORD if supplied from initial_root_password property
+<% if_p('gitlab-ee.initial_root_password') do %>
+export GITLAB_ROOT_PASSWORD="<%= p('gitlab-ee.initial_root_password') %>"
+<% end %>
+
 # Reconfigure GitLab (it can initialize database)
 $OPT_DIR/bin/gitlab-ctl reconfigure
 

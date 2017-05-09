@@ -20,6 +20,8 @@ packages:
   - route-registrar
 
 properties:
+  gitlab-ee.initial_root_password:
+    description: Initial password for root user. This does not have any affect on upgrade.
   gitlab-ee.network:
     description: The name of the network which the gitlab node runs on
   gitlab-ee.route_name:
@@ -36,9 +38,13 @@ properties:
   gitlab-ee.ssh.port:
     description: SSH port to expose
     default: 2222
+  gitlab-ee.nfs.address:
+    description: IP address or hostname of the remote NFS server
+  gitlab-ee.nfs.share:
+    description: Remote folder path on the NFS server to mount.
   gitlab-ee.nfs.mount_point:
-    description: "Location to mount the nfs share"
-    default: "/var/vcap/nfs"
+    description: Path to mount NFS
+    default: /var/cap/nfs
 
   smtp.address:
     description: Mail server address
@@ -84,6 +90,13 @@ properties:
   database.adapter:
     default: mysql2
     description: The rails adapter to use when connecting e.g mysql2 / postgresql.
+
+  ldap.enabled:
+    default: false
+    description: Enable LDAP integration. If `ldap.servers` is empty, this will disable.
+  ldap.servers:
+      default: []
+      description: Array of LDAP server configurations
 
   cf.apps_domain:
     description: Domain shared by the UAA and CF API eg '10.244.0.34.xip.io'
