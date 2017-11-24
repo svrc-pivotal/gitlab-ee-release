@@ -10,7 +10,7 @@
 ##! URL on which GitLab will be reachable.
 ##! For more details on configuring external_url see:
 ##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
-external_url "https://<%= p('gitlab-ee.route_name') %>.<%= p('cf.apps_domain') %>"
+external_url 'https://<%= p('gitlab-ee.route_name') %>.<%= p('cf.apps_domain') %>'
 
 ## Legend
 ##! The following notations at the beginning of each line may be used to
@@ -145,7 +145,7 @@ gitlab_rails['incoming_email_log_directory'] = "/var/vcap/sys/log/gitlab/mailroo
 # gitlab_rails['artifacts_enabled'] = true
 gitlab_rails['artifacts_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/artifacts"
 
-## Git LFS
+### Git LFS
 gitlab_rails['lfs_enabled'] = true
 gitlab_rails['lfs_storage_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/lfs-objects"
 
@@ -173,7 +173,10 @@ gitlab_rails['lfs_storage_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared
 #     host: '_your_ldap_server'
 #     port: 389
 #     uid: 'sAMAccountName'
-#     method: 'plain' # "tls" or "ssl" or "plain"
+#     encryption: 'plain' # "start_tls" or "simple_tls" or "plain"
+#     verify_certificates: true
+#     ca_cert: ''
+#     ssl_version: ''
 #     bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
 #     password: '_the_password_of_the_bind_user'
 #     active_directory: true
@@ -197,7 +200,10 @@ gitlab_rails['lfs_storage_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared
 #     host: '_your_ldap_server'
 #     port: 389
 #     uid: 'sAMAccountName'
-#     method: 'plain' # "tls" or "ssl" or "plain"
+#     encryption: 'plain' # "start_tls" or "simple_tls" or "plain"
+#     verify_certificates: true
+#     ca_cert: ''
+#     ssl_version: ''
 #     bind_dn: '_the_full_dn_of_the_user_you_will_bind_with'
 #     password: '_the_password_of_the_bind_user'
 #     active_directory: true
@@ -254,6 +260,30 @@ end
 #   }
 # ]
 
+## Custom for SAML
+<%
+if_p('omniauth') do
+  if p('omniauth.enabled') and p('omniauth.providers').length > 0
+%>
+gitlab_rails['omniauth_enabled'] = <%= p('omniauth.enabled') %>
+gitlab_rails['omniauth_allow_single_sign_on'] = <%= p('omniauth.allow_single_sign_on') %>
+gitlab_rails['omniauth_block_auto_created_users'] = <%= p('omniauth.block_auto_created_users') %>
+gitlab_rails['omniauth_auto_link_ldap_user'] = <%= p('omniauth.auto_link_ldap_user') %>
+gitlab_rails['omniauth_auto_link_saml_user'] = <%= p('omniauth.auto_link_saml_user') %>
+gitlab_rails['omniauth_providers'] = [
+<%
+    omniauth_providers_counter = 0
+    p('omniauth.providers').each { |providers|
+      omniauth_providers_counter += 1
+%>
+  <%= providers.inspect %>,
+<%} %>
+]
+<%
+  end
+end
+%>
+
 ### Backup Settings
 ###! Docs: https://docs.gitlab.com/omnibus/settings/backups.html
 
@@ -287,7 +317,12 @@ gitlab_rails['backup_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/back
 ###! Docs: https://docs.gitlab.com/omnibus/settings/configuration.html#storing-git-data-in-an-alternative-directory
 ###! **If you want to use a single non-default directory to store git data use a
 ###!   path that doesn't contain symlinks.**
-git_data_dir "<%= p('gitlab-ee.nfs.mount_point') %>/shared/git-data"
+git_data_dirs ({
+    "default" => {
+        "path" => "<%= p('gitlab-ee.nfs.mount_point') %>/shared/git-data",
+        "gitaly_address" => "unix:/var/opt/gitlab/gitaly/gitaly.socket"
+    }
+})
 high_availability['mountpoint'] = "<%= p('gitlab-ee.nfs.mount_point') %>"
 
 ### For storing GitLab application uploads, eg. LFS objects, build artifacts
@@ -313,10 +348,18 @@ gitlab_rails['gitlab_shell_ssh_port'] = 2222
 #   'PATH' => "/opt/gitlab/bin:/opt/gitlab/embedded/bin:/bin:/usr/bin"
 # }
 
-# CUSTOM CHANGE - not needed for internal gitlab environments 
- gitlab_rails['rack_attack_git_basic_auth'] = {
-   'enabled' => false
- }
+<%
+if_p('rackattack.enabled') do %>
+gitlab_rails['rack_attack_git_basic_auth'] = {
+   'enabled' => <%= p('rackattack.enabled') %>,
+#   'ip_whitelist' => ["127.0.0.1"],
+#   'maxretry' => 10,
+#   'findtime' => 60,
+#   'bantime' => 3600
+}
+<%
+end
+%>
 
 # gitlab_rails['rack_attack_protected_paths'] = [
 #   '/users/password',
@@ -368,6 +411,8 @@ gitlab_rails['db_port'] = "<%= p('database.port') %>".to_i
 gitlab_rails['db_socket'] = nil
 gitlab_rails['db_sslmode'] = nil
 gitlab_rails['db_sslrootcert'] = nil
+# gitlab_rails['db_prepared_statements'] = true
+# gitlab_rails['db_statements_limit'] = 1000
 gitlab_rails['db_max_allowed_packet'] = "512M"
 
 ### GitLab Redis settings
@@ -417,7 +462,7 @@ gitlab_rails['smtp_tls'] = <%= p('smtp.tls') %>
 
 ###! **Can be: 'none', 'peer', 'client_once', 'fail_if_no_peer_cert'**
 ###! Docs: http://api.rubyonrails.org/classes/ActionMailer/Base.html
-gitlab_rails['smtp_openssl_verify_mode'] = 'none' 
+gitlab_rails['smtp_openssl_verify_mode'] = 'none'
 
 gitlab_rails['smtp_ca_path'] = "/etc/ssl/certs"
 gitlab_rails['smtp_ca_file'] = "/etc/ssl/certs/ca-certificates.crt"
@@ -524,9 +569,10 @@ gitlab_workhorse['log_directory'] = "/var/vcap/sys/log/gitlab/workhorse"
 ##! Long polling duration for job requesting for runners
 # gitlab_workhorse['api_ci_long_polling_duration'] = "60s"
 
-# gitlab_workhorse['env'] = {
-#   'PATH' => "/opt/gitlab/bin:/opt/gitlab/embedded/bin:/bin:/usr/bin"
-# }
+gitlab_workhorse['env'] = {
+   'PATH' => "/opt/gitlab/bin:/opt/gitlab/embedded/bin:/bin:/usr/bin",
+   'TMPDIR' => "/var/vcap/data/gitlab-ee/tmp"
+}
 
 ################################################################################
 ## GitLab User Settings
@@ -824,6 +870,26 @@ EOS
 # nginx['proxy_cache'] = 'gitlab'
 # nginx['http2_enabled'] = true
 # nginx['real_ip_trusted_addresses'] = []
+<%
+if_p('nginx') do
+  trusted_addresses = []
+
+  if p('nginx.trusted_addresses').length > 0
+    trusted_addresses += p('nginx.trusted_addresses')
+  end
+
+  if p('nginx.pcf_trusted_addresses').length > 0
+    trusted_addresses += p('nginx.pcf_trusted_addresses')
+  end
+
+  if trusted_addresses.length > 0
+%>
+nginx['real_ip_trusted_addresses'] = <%= trusted_addresses.inspect %>
+<%
+  end
+end
+%>
+
 # nginx['real_ip_header'] = nil
 # nginx['real_ip_recursive'] = nil
 # nginx['custom_error_pages'] = {
@@ -1373,16 +1439,17 @@ gitlab_monitor['enable'] = false
 ################################################################################
 
 
-gitaly['enable'] = false
+# gitaly['enable'] = true
 # gitaly['dir'] = "/var/opt/gitlab/gitaly"
 # gitaly['log_directory'] = "/var/vcap/sys/log/gitlab/gitaly"
 # gitaly['bin_path'] = "/opt/gitlab/embedded/bin/gitaly"
 # gitaly['env_directory'] = "/opt/gitlab/etc/gitaly"
-# gitaly['env'] = {
-#  'PATH' => "/opt/gitlab/bin:/opt/gitlab/embedded/bin:/bin:/usr/bin",
-#  'HOME' => '/var/opt/gitlab',
-#  'GITALY_SOCKET_PATH' => "/var/opt/gitlab/gitaly/gitaly.socket"
-# }
+gitaly['env'] = {
+  'PATH' => "/opt/gitlab/bin:/opt/gitlab/embedded/bin:/bin:/usr/bin",
+  'HOME' => '/var/opt/gitlab',
+  'GITALY_SOCKET_PATH' => "/var/opt/gitlab/gitaly/gitaly.socket",
+  'TMPDIR' => "/var/vcap/data/gitlab-ee/tmp"
+}
 
 
 ################################################################################
@@ -1484,6 +1551,10 @@ sentinel['enable'] = false
 
 ##! remote port to ship log messages to via UDP
 # logging['udp_log_shipping_port'] = 514
+
+## Custom Logging
+logging['udp_log_shipping_host'] = '<%= p('gitlab.syslog_udp_host') %>'
+logging['udp_log_shipping_port'] = <%= p('gitlab.syslog_udp_port') %>
 
 ################################################################################
 ## GitLab Sidekiq Cluster (EE only)

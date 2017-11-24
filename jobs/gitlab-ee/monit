@@ -24,6 +24,6 @@ check process gitlab-workhorse with pidfile /opt/gitlab/service/gitlab-workhorse
 
 check process route-registrar
   with pidfile /var/vcap/sys/run/route-registrar.pid
-  start program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl start" with timeout 10 seconds
-  stop program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl stop" with timeout 10 seconds
+  start program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl start"
+  stop program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl stop"
   group vcap

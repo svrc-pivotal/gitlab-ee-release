@@ -1,11 +1,11 @@
 ---
 builds:
-  098c98d9-fe51-40a6-a5e1-7c5dd0a95bce:
-    version: 1.1.field1
-  60fdbb86-fd16-4770-b729-55abc9bb0dfd:
-    version: 1.1.6.field5
-  3e779003-9e3f-4da3-9a66-922be1560dd4:
-    version: 1.1.7.field1
-  8cbf2a86-dfa1-46d9-9d6e-c83aadf333c9:
-    version: 1.2.0.field2
+  e3330023-860e-408e-bfc4-d9add11bc973:
+    version: 1.2.5.field2
+  afe41bff-beb5-459b-ba00-cff573c3bc2a:
+    version: 1.2.5.field6-dev5
+  c7ec20cd-79ba-4879-96e0-066f468dc276:
+    version: 1.2.5.field3
+  c5159098-bf1e-4480-9572-ddef7182bfe3:
+    version: 1.2.5.field4
 format-version: '2'

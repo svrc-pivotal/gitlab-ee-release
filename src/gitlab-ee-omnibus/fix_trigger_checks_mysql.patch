@@ -1,0 +1,83 @@
+From 216b4eef0d34195867052f67d98d14b5933cd415 Mon Sep 17 00:00:00 2001
+From: Yorick Peterse <yorickpeterse@gmail.com>
+Date: Mon, 6 Nov 2017 18:50:38 +0100
+Subject: [PATCH] Fix TRIGGER checks for MySQL
+
+This ensures we can check if the user has TRIGGER permissions without
+querying restricted tables. Thanks to Steve Norman
+(https://gitlab.com/stevenorman) for helping out with this merge
+request.
+
+Fixes https://gitlab.com/gitlab-org/gitlab-ce/issues/38372
+---
+ embedded/service/gitlab-rails/changelogs/unreleased/fix-mysql-grant-check.yml |  5 +++++
+ embedded/service/gitlab-rails/lib/gitlab/database/grant.rb                    | 30 ++++++++++++++++---------
+ 3 files changed, 29 insertions(+), 27 deletions(-)
+ create mode 100644 changelogs/unreleased/fix-mysql-grant-check.yml
+
+diff --git embedded/service/gitlab-rails/changelogs/unreleased/fix-mysql-grant-check.yml embedded/service/gitlab-rails/changelogs/unreleased/fix-mysql-grant-check.yml
+new file mode 100644
+index 00000000000..a1c1aa67d79
+--- /dev/null
++++ embedded/service/gitlab-rails/changelogs/unreleased/fix-mysql-grant-check.yml
+@@ -0,0 +1,5 @@
++---
++title: Fix TRIGGER checks for MySQL
++merge_request:
++author:
++type: fixed
+diff --git embedded/service/gitlab-rails/lib/gitlab/database/grant.rb embedded/service/gitlab-rails/lib/gitlab/database/grant.rb
+index aee3981e79a..9f76967fc77 100644
+--- embedded/service/gitlab-rails/lib/gitlab/database/grant.rb
++++ embedded/service/gitlab-rails/lib/gitlab/database/grant.rb
+@@ -6,28 +6,36 @@ module Gitlab
+         if Database.postgresql?
+           'information_schema.role_table_grants'
+         else
+-          'mysql.user'
++          'information_schema.schema_privileges'
+         end
+ 
+-      def self.scope_to_current_user
+-        if Database.postgresql?
+-          where('grantee = user')
+-        else
+-          where("CONCAT(User, '@', Host) = current_user()")
+-        end
+-      end
+-
+       # Returns true if the current user can create and execute triggers on the
+       # given table.
+       def self.create_and_execute_trigger?(table)
+         priv =
+           if Database.postgresql?
+             where(privilege_type: 'TRIGGER', table_name: table)
++              .where('grantee = user')
+           else
+-            where(Trigger_priv: 'Y')
++            queries = [
++              Grant.select(1)
++                .from('information_schema.user_privileges')
++                .where("PRIVILEGE_TYPE = 'SUPER'")
++                .where("GRANTEE = CONCAT('\\'', REPLACE(CURRENT_USER(), '@', '\\'@\\''), '\\'')"),
++
++              Grant.select(1)
++                .from('information_schema.schema_privileges')
++                .where("PRIVILEGE_TYPE = 'TRIGGER'")
++                .where('TABLE_SCHEMA = ?', Gitlab::Database.database_name)
++                .where("GRANTEE = CONCAT('\\'', REPLACE(CURRENT_USER(), '@', '\\'@\\''), '\\'')")
++            ]
++
++            union = SQL::Union.new(queries).to_sql
++
++            Grant.from("(#{union}) privs")
+           end
+ 
+-        priv.scope_to_current_user.any?
++        priv.any?
+       end
+     end
+   end
+-- 
+2.13.6
+

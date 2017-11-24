@@ -5,6 +5,7 @@ MONITOR_FILE=$GITLAB_JOB_DIR/initialized
 GITLAB_STORE=/var/vcap/nfs/shared
 DB_INITIALIZED_FILE=$GITLAB_STORE/db_initialized
 LOG_DIR=/var/vcap/sys/log/gitlab
+TMPDIR=/var/vcap/data/gitlab-ee/tmp
 
 # Pre create log directory
 mkdir -p $LOG_DIR

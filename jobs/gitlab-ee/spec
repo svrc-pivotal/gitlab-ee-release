@@ -47,7 +47,11 @@ properties:
     description: Remote folder path on the NFS server to mount.
   gitlab-ee.nfs.mount_point:
     description: Path to mount NFS
-    default: "/var/vcap/nfs"
+    default: /var/vcap/nfs
+
+  rackattack.enabled:
+    description: Enable or disable RackAttack inside GitLab (default on)
+    default: false
 
   smtp.address:
     description: Mail server address
@@ -100,6 +104,39 @@ properties:
   ldap.servers:
       default: []
       description: Array of LDAP server configurations
+
+  nginx.trusted_addresses:
+    description: Array of Address/CIDR of trusted proxies, to be consumed by nginx[real_ip_trusted_addresses].
+    default: []
+  nginx.pcf_trusted_addresses:
+    description: CF Router instance IPs, filled by PCF OpsManager
+    default: []
+
+  omniauth.enabled:
+    default: false
+    description: Enable SAML integration. If `omniauth.providers` is empty, this will disable.
+  omniauth.allow_single_sign_on:
+    default: [saml]
+    description: Allow single sign on 
+  omniauth.block_auto_created_users:
+    default: false
+    description: Block auto created user 
+  omniauth.auto_link_ldap_user:
+    default: true
+    description:  Auto link LDAP users 
+  omniauth.auto_link_saml_user:
+    default: true
+    description:  Auto link SAML users 
+  omniauth.providers:
+      default: []
+      description: Array of SAML configurations
+
+  gitlab.syslog_udp_host:
+    default: nil
+    description:  remote host to ship log messages to via UDP
+  gitlab.syslog_udp_port:
+    default: 514
+    description:  remote port to ship log messages to via UDP
 
   cf.apps_domain:
     description: Domain shared by the UAA and CF API eg '10.244.0.34.xip.io'

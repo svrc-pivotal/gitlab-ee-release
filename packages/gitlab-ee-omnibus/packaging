@@ -3,13 +3,19 @@ set -xe
 set -o pipefail
 
 # extract debian archive and then
-dpkg -x gitlab-ee-omnibus/gitlab-ee_9.0.7-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
+dpkg -x gitlab-ee-omnibus/gitlab-ee_10.0.6-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 
 # this patch is required for gitlab-shell to properly create authorized_keys
 # otherwise the authorized_keys gitlab-shell command points to /var/vcap/data/packages/gitlab-ee-omnibus/...,
 # because the File.expand_path is used to resolve the gitlab-shell directory
 # this happens, because we use /opt/gitlab symlink to /var/vcap/packages/gitlab-ee-omnibus
 patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_gitlab_shell_path.patch
+
+# This patch is required for compatibility with MySQL for permissions checks on TRIGGERs.
+# See:
+# - https://gitlab.com/gitlab-org/gitlab-ce/merge_requests/15226
+# - https://gitlab.com/gitlab-org/gitlab-ce/issues/38372
+patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_trigger_checks_mysql.patch
 
 # this patch is required to workaround https://gitlab.com/gitlab-org/gitlab-ce/issues/29076
 patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_mysql_backup.patch

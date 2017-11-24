@@ -41,6 +41,11 @@ ln -sf /var/vcap/nfs/shared/etc/gitlab /etc/
 cp $GITLAB_JOB_DIR/config/gitlab.rb /etc/gitlab/gitlab.rb
 chmod 600 /etc/gitlab/gitlab.rb
 
+## Ensure TMPDIR is present and appropriately configured.
+
+mkdir -p $TMPDIR
+chmod 777 $TMPDIR
+
 # Always try to create the database
 /opt/gitlab/embedded/bin/mysql "--host=<%= p('database.host') %>" "--port=<%= p('database.port') %>" "--user=<%= p('database.username') %>" "--password=<%= p('database.password') %>" -e 'CREATE DATABASE IF NOT EXISTS `<%= p('database.name') %>`'
 
