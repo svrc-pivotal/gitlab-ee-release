@@ -13,6 +13,15 @@ packages:
   - common
   - debian_nfs_server
 
+provides:
+- name: gitlab_nfs
+  type: gitlab_nfs
+
+consumes:
+- name: gitlab
+  type: gitlab
+  optional: false
+
 properties:
   nfs_server.no_root_squash:
     description: "Exports /var/vcap/store with no_root_squash when set to true"
@@ -25,4 +34,3 @@ properties:
   nfs_server.pipefs_directory:
     description: "Pipefs directory for NFS idmapd"
     default: "/var/lib/nfs/rpc_pipef" # There was always a missing trailing 's', keeping this for backwards compatibility
-

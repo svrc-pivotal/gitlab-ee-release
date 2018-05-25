@@ -12,6 +12,11 @@ templates:
 packages:
   - common
 
+consumes:
+- name: gitlab_nfs
+  type: gitlab_nfs
+  optional: true
+
 properties:
   gitlab-ee.nfs.address:
     description: "NFS server address"

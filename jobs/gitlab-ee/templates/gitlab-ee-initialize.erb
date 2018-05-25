@@ -47,7 +47,7 @@ mkdir -p $TMPDIR
 chmod 777 $TMPDIR
 
 # Always try to create the database
-/opt/gitlab/embedded/bin/mysql "--host=<%= p('database.host') %>" "--port=<%= p('database.port') %>" "--user=<%= p('database.username') %>" "--password=<%= p('database.password') %>" -e 'CREATE DATABASE IF NOT EXISTS `<%= p('database.name') %>`'
+/opt/gitlab/embedded/bin/mysql "--host=<%= p('database.host') %>" "--port=<%= p('database.port') %>" "--user=<%= p('database.username') %>" "--password=<%= p('database.password') %>" -e 'CREATE DATABASE IF NOT EXISTS `<%= p('database.name') %>` CHARACTER SET utf8mb4 collate utf8mb4_general_ci'
 
 # Create directory where reconfigure logs are stored
 mkdir -p /var/log/gitlab/reconfigure/
@@ -57,11 +57,18 @@ mkdir -p /var/log/gitlab/reconfigure/
 export GITLAB_ROOT_PASSWORD="<%= p('gitlab-ee.initial_root_password') %>"
 <% end %>
 
+# Ensure the InnoDB tables use Barracuda engine, and `utf8mb4` encoding.
+/usr/bin/flock /var/vcap/nfs/shared/gitlab-ee-db-convert-row-format.lock $GITLAB_JOB_DIR/bin/gitlab-ee-db-convert-row-format
+
 # Reconfigure GitLab (it can initialize database)
 $OPT_DIR/bin/gitlab-ctl reconfigure
 
 # Setup the GitLab DB
 /usr/bin/flock /var/vcap/nfs/shared/gitlab-ee-db-setup.lock $GITLAB_JOB_DIR/bin/gitlab-ee-db-setup
+
+# Run add_limits_mysql rake task, per documentation for MySQL support
+# https://docs.gitlab.com/ee/install/database_mysql.html#mysql-strings-limits
+$OPT_DIR/bin/gitlab-rake add_limits_mysql
 
 # Ensure database has max_allowed_packet setting per https://gitlab.com/gitlab-org/gitlab-ce/issues/29076
 echo '  max_allowed_packet: "512M"' >> /opt/gitlab/embedded/service/gitlab-rails/config/database.yml

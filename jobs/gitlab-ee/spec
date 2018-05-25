@@ -7,17 +7,18 @@ templates:
   gitlab-ee-db-setup.erb: bin/gitlab-ee-db-setup
   gitlab-ee-common.erb: config/gitlab-ee-common
   gitlab.rb.erb: config/gitlab.rb
-
+  gitlab-ee-db-convert-row-format.erb: bin/gitlab-ee-db-convert-row-format
   ssh_host_rsa_key.erb: config/ssh_host_rsa_key
   sshd_config.erb: config/sshd_config
   sshd_ctl.erb: bin/sshd_ctl
 
-  route-registrar_ctl: bin/route-registrar_ctl
-  registrar_settings.yml.erb: config/registrar_settings.yml
+
+provides:
+ - name: gitlab
+   type: gitlab
 
 packages:
   - gitlab-ee-omnibus
-  - route-registrar
 
 properties:
   gitlab-ee.initial_root_password:
@@ -29,6 +30,11 @@ properties:
     default: gitlab
   gitlab-ee.external_host:
     description: The host that Gitlab is accessed at
+  gitlab-ee.ssh.extraConfig:
+    description: Configuration snippet to be appended to `sshd_config`. This entry is intended to allow configuration of security parameters such as `Ciphers`, `MACs`, and `KexAlgorithms`. See https://docs.pivotal.io/partners/gitlab/config.html for additional details.
+    default: |-
+      Ciphers aes256-gcm@openssh.com,aes128-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-ctr
+      MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160,hmac-sha1
   gitlab-ee.email_from:
     description: Email address used in the "From" field in mails sent by GitLab
   gitlab-ee.email_reply_to:
@@ -43,11 +49,6 @@ properties:
 
   gitlab-ee.nfs.address:
     description: IP address or hostname of the remote NFS server
-  gitlab-ee.nfs.share:
-    description: Remote folder path on the NFS server to mount.
-  gitlab-ee.nfs.mount_point:
-    description: Path to mount NFS
-    default: /var/vcap/nfs
 
   rackattack.enabled:
     description: Enable or disable RackAttack inside GitLab (default on)
@@ -82,7 +83,7 @@ properties:
     default: gitlabhq_production
     description: The database name.
   database.encoding:
-    default: utf8
+    default: utf8mb4
     description: The database encoding e.g 'utf8' for mysql or 'unicode' for postgres.
   database.host:
     description: The host to connect to for database.

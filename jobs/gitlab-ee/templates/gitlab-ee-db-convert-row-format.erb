@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source /var/vcap/jobs/gitlab-ee/config/gitlab-ee-common
+
+exec 1>>$LOG_DIR/gitlab-ee-db-convert-row-format.log
+exec 2>&1
+
+function call_mysql() {
+  /opt/gitlab/embedded/bin/mysql "--host=<%= p('database.host') %>" "--port=<%= p('database.port') %>" "--user=<%= p('database.username') %>" "--password=<%= p('database.password') %>" "$@"
+}
+
+DATABASE=<%= p('database.name') %>
+
+COLLATE=utf8mb4_general_ci
+ROW_FORMAT=DYNAMIC
+
+TABLES=$(call_mysql -s $DATABASE -e 'show tables')
+
+call_mysql $DATABASE -e "ALTER DATABASE $DATABASE CHARACTER SET utf8mb4 COLLATE $COLLATE"
+
+for TABLE in $TABLES ; do
+  call_mysql $DATABASE -e "ALTER TABLE $TABLE ROW_FORMAT=$ROW_FORMAT CHARACTER SET utf8mb4 COLLATE $COLLATE;"
+done

@@ -1,4 +1,9 @@
-<% if_p('gitlab-ee.nfs.address') do %>
+<%
+  mount_nfs = false
+  if_link('gitlab_nfs') { mount_nfs = true }
+  if_p('gitlab-ee.nfs.address') { mount_nfs = true }
+  if mount_nfs == true then
+%>
 
 check file nfs_mounter path /var/vcap/sys/run/nfs_monitor_share/shared/.nfs_test
   start program "/var/vcap/jobs/nfs_mounter/bin/nfs_mounter_ctl start"

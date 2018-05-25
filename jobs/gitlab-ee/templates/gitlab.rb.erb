@@ -10,7 +10,7 @@
 ##! URL on which GitLab will be reachable.
 ##! For more details on configuring external_url see:
 ##! https://docs.gitlab.com/omnibus/settings/configuration.html#configuring-the-external-url-for-gitlab
-external_url 'https://<%= p('gitlab-ee.route_name') %>.<%= p('cf.apps_domain') %>'
+external_url 'https://<%= p('gitlab-ee.external_host') %>'
 
 ## Legend
 ##! The following notations at the beginning of each line may be used to
@@ -143,11 +143,11 @@ gitlab_rails['incoming_email_log_directory'] = "/var/vcap/sys/log/gitlab/mailroo
 
 ### Build Artifacts
 # gitlab_rails['artifacts_enabled'] = true
-gitlab_rails['artifacts_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/artifacts"
+gitlab_rails['artifacts_path'] = "/var/vcap/nfs/shared/artifacts"
 
 ### Git LFS
 gitlab_rails['lfs_enabled'] = true
-gitlab_rails['lfs_storage_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/lfs-objects"
+gitlab_rails['lfs_storage_path'] = "/var/vcap/nfs/shared/lfs-objects"
 
 ## ElasticSearch (EE only)
 # gitlab_rails['elasticsearch_enabled'] = false
@@ -288,7 +288,7 @@ end
 ###! Docs: https://docs.gitlab.com/omnibus/settings/backups.html
 
 # gitlab_rails['manage_backup_path'] = true
-gitlab_rails['backup_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/backups"
+gitlab_rails['backup_path'] = "/var/vcap/nfs/shared/backups"
 
 ###! Docs: https://docs.gitlab.com/ce/raketasks/backup_restore.html#backup-archive-permissions
 # gitlab_rails['backup_archive_permissions'] = 0644
@@ -319,15 +319,15 @@ gitlab_rails['backup_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/back
 ###!   path that doesn't contain symlinks.**
 git_data_dirs ({
     "default" => {
-        "path" => "<%= p('gitlab-ee.nfs.mount_point') %>/shared/git-data",
+        "path" => "/var/vcap/nfs/shared/git-data",
         "gitaly_address" => "unix:/var/opt/gitlab/gitaly/gitaly.socket"
     }
 })
-high_availability['mountpoint'] = "<%= p('gitlab-ee.nfs.mount_point') %>"
+high_availability['mountpoint'] = "/var/vcap/nfs"
 
 ### For storing GitLab application uploads, eg. LFS objects, build artifacts
 ###! Docs: https://docs.gitlab.com/ce/development/shared_files.html
-gitlab_rails['shared_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared"
+gitlab_rails['shared_path'] = "/var/vcap/nfs/shared"
 
 
 ### DEPRECATED: gitlab_rails['satellites_timeout'] = 30
@@ -377,7 +377,7 @@ end
 gitlab_rails['log_directory'] = "/var/vcap/sys/log/gitlab/gitlab-rails"
 
 ### GitLab application settings
-gitlab_rails['uploads_directory'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/uploads"
+gitlab_rails['uploads_directory'] = "/var/vcap/nfs/shared/uploads"
 # gitlab_rails['rate_limit_requests_per_period'] = 10
 # gitlab_rails['rate_limit_period'] = 60
 
@@ -400,7 +400,12 @@ gitlab_rails['initial_root_password'] = "<%= p('gitlab-ee.initial_root_password'
 ###! Docs: https://docs.gitlab.com/omnibus/settings/database.html
 ###! **Only needed if you use an external database.**
 gitlab_rails['db_adapter'] = "<%= p('database.adapter') %>"
+<% if p('database.encoding').start_with? 'utf8' then %>
+gitlab_rails['db_encoding'] = "utf8mb4"
+gitlab_rails['db_collation'] = "utf8mb4_general_ci"
+<% else %>
 gitlab_rails['db_encoding'] = "<%= p('database.encoding') %>"
+<% end %>
 # gitlab_rails['db_collation'] = nil
 gitlab_rails['db_database'] = "<%= p('database.name') %>"
 gitlab_rails['db_pool'] = 10
@@ -590,7 +595,7 @@ gitlab_workhorse['env'] = {
 
 ##! The home directory for the git user
 # This points to NFS shared folder in order to share authorized_keys across all GitLab-EE nodes
-user['home'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/git-user"
+user['home'] = "/var/vcap/nfs/shared/git-user"
 # user['git_user_name'] = "GitLab"
 # user['git_user_email'] = "gitlab@#{node['fqdn']}"
 
@@ -1064,7 +1069,7 @@ pages_nginx['enable'] = false
 # pages_nginx['dir'] = "/var/opt/gitlab/nginx"
 pages_nginx['log_directory'] = "/var/vcap/sys/log/gitlab/nginx"
 
-gitlab_rails['pages_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/pages"
+gitlab_rails['pages_path'] = "/var/vcap/nfs/shared/pages"
 
 ################################################################################
 ## GitLab CI
@@ -1073,7 +1078,7 @@ gitlab_rails['pages_path'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/pages
 
 # gitlab_ci['gitlab_ci_all_broken_builds'] = true
 # gitlab_ci['gitlab_ci_add_pusher'] = true
-gitlab_ci['builds_directory'] = "<%= p('gitlab-ee.nfs.mount_point') %>/shared/builds"
+gitlab_ci['builds_directory'] = "/var/vcap/nfs/shared/builds"
 
 ################################################################################
 ## GitLab Mattermost

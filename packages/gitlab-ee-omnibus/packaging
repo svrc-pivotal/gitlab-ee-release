@@ -3,7 +3,7 @@ set -xe
 set -o pipefail
 
 # extract debian archive and then
-dpkg -x gitlab-ee-omnibus/gitlab-ee_10.1.4-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
+dpkg -x gitlab-ee-omnibus/gitlab-ee_10.4.4-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 
 # this patch is required for gitlab-shell to properly create authorized_keys
 # otherwise the authorized_keys gitlab-shell command points to /var/vcap/data/packages/gitlab-ee-omnibus/...,
@@ -14,6 +14,10 @@ patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_gitlab_
 # this patch is required to workaround https://gitlab.com/gitlab-org/gitlab-ce/issues/29076
 patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/fix_mysql_backup.patch
 
+# Add `ar_innodb_row_format` monkey patch, to ensure new InnoDB tables use Barracuda/DYNAMIC storage.
+# See https://gitlab.com/gitlab-pivotal/gitlab-ee-bosh-release/issues/15
+patch -d "${BOSH_INSTALL_TARGET}/opt/gitlab" -p0 < gitlab-ee-omnibus/add_ar_innodb_row_format_initializer.patch
+
 RUNIT_RECIPE="${BOSH_INSTALL_TARGET}/opt/gitlab/embedded/cookbooks/runit/recipes/default.rb"
 if [[ ! -e $RUNIT_RECIPE ]]; then
   echo "WARNING: Missing file $RUNIT_RECIPE."
@@ -21,3 +25,5 @@ if [[ ! -e $RUNIT_RECIPE ]]; then
 fi
 
 echo > $RUNIT_RECIPE
+
+
