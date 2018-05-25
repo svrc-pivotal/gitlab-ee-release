@@ -7,7 +7,7 @@ go/go1.4.1.linux-amd64.tar.gz:
   object_id: fcf24fb5-3d51-4f13-9973-e8e195d71dbf
   sha: 3e871200e13c0b059b14866d428910de0a4c51ed
   size: 62402109
-gitlab-ee-omnibus/gitlab-ee_10.0.6-ee.0_amd64.deb:
-  object_id: 820eccdd-a3a6-4d98-a25e-6945a1a63fbe
-  sha: 97fdebcc45822e29c4c95d3d8e2a44a10522bdbe
-  size: 406448788
+gitlab-ee-omnibus/gitlab-ee_10.1.4-ee.0_amd64.deb:
+  object_id: 81da5c4b-00e3-4d39-a3d1-426a830b1e9f
+  sha: 64e809e1e297c50dc51d3eb5b6e24db956aca16d
+  size: 417596038
