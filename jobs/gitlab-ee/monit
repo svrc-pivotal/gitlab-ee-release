@@ -21,9 +21,3 @@ check process gitlab-sidekiq with pidfile /opt/gitlab/service/sidekiq/supervise/
 check process gitlab-unicorn with pidfile /opt/gitlab/service/unicorn/supervise/pid
 
 check process gitlab-workhorse with pidfile /opt/gitlab/service/gitlab-workhorse/supervise/pid
-
-check process route-registrar
-  with pidfile /var/vcap/sys/run/route-registrar.pid
-  start program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl start"
-  stop program "/var/vcap/jobs/gitlab-ee/bin/route-registrar_ctl stop"
-  group vcap
