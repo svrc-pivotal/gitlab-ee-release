@@ -606,9 +606,11 @@ user['home'] = "/var/vcap/nfs/shared/git-user"
 ################################################################################
 
 # unicorn['worker_timeout'] = 60
+unicorn['worker_timeout'] = 120
 ###! Minimum worker_processes is 2 at this moment
 ###! See https://gitlab.com/gitlab-org/gitlab-ce/issues/18771
 # unicorn['worker_processes'] = 2
+unicorn['worker_processes'] = 8
 
 ### Advanced settings
 # unicorn['listen'] = '127.0.0.1'
@@ -628,7 +630,9 @@ unicorn['log_directory'] = "/var/vcap/sys/log/gitlab/unicorn"
 ###! Docs: https://about.gitlab.com/2015/06/05/how-gitlab-uses-unicorn-and-unicorn-worker-killer/
 ###!       https://github.com/kzk/unicorn-worker-killer
 # unicorn['worker_memory_limit_min'] = "400 * 1 << 20"
+unicorn['worker_memory_limit_min'] = "600 * 1 << 20"
 # unicorn['worker_memory_limit_max'] = "650 * 1 << 20"
+unicorn['worker_memory_limit_max'] = "800 * 1 << 20"
 
 ################################################################################
 ## GitLab Sidekiq

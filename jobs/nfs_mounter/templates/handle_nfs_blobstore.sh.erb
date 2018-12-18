@@ -27,7 +27,7 @@ mount_nfs() {
 
   echo "Mounting NFS..."
   mkdir -p $NFS_MOUNT_POINT
-  timeout 10s mount --verbose -o timeo=10,intr,lookupcache=positive -t nfs4 <%= nfs_address %>:<%= p('gitlab-ee.nfs.share') %> $NFS_MOUNT_POINT
+  timeout 10s mount --verbose -o timeo=10,intr,rsize=1048576,wsize=1048576,noatime,nofail,vers=4.1,lookupcache=positive -t nfs4 <%= nfs_address %>:<%= p('gitlab-ee.nfs.share') %> $NFS_MOUNT_POINT
   if [ $? != 0 ]; then
     echo "Cannot mount NFS, exiting..."
     exit 1
@@ -35,7 +35,7 @@ mount_nfs() {
 
   echo "Mounting NFS monitor share..."
   mkdir -p $NFS_MONITOR_SHARE
-  timeout 10s mount --verbose -o timeo=10,soft,lookupcache=positive -t nfs4 <%= nfs_address %>:<%= p('gitlab-ee.nfs.share') %> $NFS_MONITOR_SHARE
+  timeout 10s mount --verbose -o timeo=10,soft,rsize=1048576,wsize=1048576,noatime,nofail,vers=4.1,lookupcache=positive -t nfs4 <%= nfs_address %>:<%= p('gitlab-ee.nfs.share') %> $NFS_MONITOR_SHARE
 
   touch $NFS_MONITOR_SHARE/shared/.nfs_test
   chown vcap:vcap $NFS_MONITOR_SHARE/shared/.nfs_test
