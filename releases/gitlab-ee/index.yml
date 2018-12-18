@@ -1,6 +1,8 @@
 builds:
   35a9ef95-fc59-4ce5-a46a-6585380a4055:
     version: 1.4.0.field1
+  4b1f7c88-85b5-40a4-7273-e3307995ba64:
+    version: 1.4.4.field6
   94e33eeb-0154-44cd-4c9a-b2868eac86a4:
     version: 1.4.4.field2
   afe41bff-beb5-459b-ba00-cff573c3bc2a:
@@ -13,4 +15,4 @@ builds:
     version: 1.2.5.field2
   eb6b5eab-c127-471e-b0c3-505d60ac2e83:
     version: 1.3.0.field1
-format-version: '2'
+format-version: "2"
