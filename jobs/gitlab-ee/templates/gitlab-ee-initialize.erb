@@ -58,7 +58,8 @@ export GITLAB_ROOT_PASSWORD="<%= p('gitlab-ee.initial_root_password') %>"
 <% end %>
 
 # Ensure the InnoDB tables use Barracuda engine, and `utf8mb4` encoding.
-/usr/bin/flock /var/vcap/nfs/shared/gitlab-ee-db-convert-row-format.lock $GITLAB_JOB_DIR/bin/gitlab-ee-db-convert-row-format
+# manulife - Commented out this line so it does not run on every stemcell update
+#/usr/bin/flock /var/vcap/nfs/shared/gitlab-ee-db-convert-row-format.lock $GITLAB_JOB_DIR/bin/gitlab-ee-db-convert-row-format
 
 # Reconfigure GitLab (it can initialize database)
 $OPT_DIR/bin/gitlab-ctl reconfigure

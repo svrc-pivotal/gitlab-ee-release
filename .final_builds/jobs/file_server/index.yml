@@ -11,4 +11,4 @@ builds:
     version: deb754579eca1cf87a703b2137a3aec148e4d332
     blobstore_id: dbf50b9b-346c-439f-5b00-4f8717d4bc70
     sha1: 9347faa5b355302fcd6da9fc41a9c3356dc503df
-format-version: "2"
+format-version: '2'
