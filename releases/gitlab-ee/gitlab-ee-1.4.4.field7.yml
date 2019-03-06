@@ -1,0 +1,37 @@
+name: gitlab-ee
+version: 1.4.4.field7
+commit_hash: c201f9e
+uncommitted_changes: true
+jobs:
+- name: file_server
+  version: deb754579eca1cf87a703b2137a3aec148e4d332
+  fingerprint: deb754579eca1cf87a703b2137a3aec148e4d332
+  sha1: 9347faa5b355302fcd6da9fc41a9c3356dc503df
+- name: gitlab-ee
+  version: cde92f0cf4580e5b0b883bac8886866155dfc079
+  fingerprint: cde92f0cf4580e5b0b883bac8886866155dfc079
+  sha1: 1bd60e4ce444a62f00be3b4b1e66a3881c63fbe5
+- name: nfs_mounter
+  version: 580e5b40b851e6d08c1e871ff4fd6a0558782716
+  fingerprint: 580e5b40b851e6d08c1e871ff4fd6a0558782716
+  sha1: 57053f7e4e09ee734dc667023ebd4e58a4f3920b
+packages:
+- name: common
+  version: 7ac3dbdf117992941f5080dc5bb412e9e4196e33
+  fingerprint: 7ac3dbdf117992941f5080dc5bb412e9e4196e33
+  sha1: 7b1e6a721d1fc70d4acd570001328a6498de6441
+  dependencies: []
+- name: debian_nfs_server
+  version: 6920d37efb8f73b8bc39916909452924d60341a2
+  fingerprint: 6920d37efb8f73b8bc39916909452924d60341a2
+  sha1: 072b305e401803ae55fa1cf5ce54f6d7596a8b44
+  dependencies: []
+- name: gitlab-ee-omnibus
+  version: 4e8fc798672e1027fc5706658af5ce42081c67c1
+  fingerprint: 4e8fc798672e1027fc5706658af5ce42081c67c1
+  sha1: b960b873ba94fb4dad3aa2e29ad3cd5357a9f014
+  dependencies: []
+license:
+  version: f978201e9cd6abe66ebcc7d85ec23d8124f520fc
+  fingerprint: f978201e9cd6abe66ebcc7d85ec23d8124f520fc
+  sha1: 50c8810d8e18f18989368083740fd0ab6933bb4e

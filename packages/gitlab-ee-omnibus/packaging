@@ -3,7 +3,7 @@ set -xe
 set -o pipefail
 
 # extract debian archive and then
-dpkg -x gitlab-ee-omnibus/gitlab-ee_10.4.4-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
+dpkg -x gitlab-ee-omnibus/gitlab-ee_10.8.7-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 
 # this patch is required for gitlab-shell to properly create authorized_keys
 # otherwise the authorized_keys gitlab-shell command points to /var/vcap/data/packages/gitlab-ee-omnibus/...,
