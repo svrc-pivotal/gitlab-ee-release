@@ -2,7 +2,8 @@
 name: gitlab-ee-omnibus
 
 files:
-  - gitlab-ee-omnibus/gitlab-ee_10.8.7-ee.0_amd64.deb
+  - gitlab-ee-omnibus/trusty/gitlab-ee_10.8.7-ee.0_amd64.deb
+  - gitlab-ee-omnibus/xenial/gitlab-ee_10.8.7-ee.0_amd64.deb
   - gitlab-ee-omnibus/fix_gitlab_shell_path.patch
   - gitlab-ee-omnibus/fix_mysql_backup.patch
   - gitlab-ee-omnibus/add_ar_innodb_row_format_initializer.patch

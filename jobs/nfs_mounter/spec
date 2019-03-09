@@ -8,9 +8,11 @@ templates:
   idmapd.conf.erb: config/idmapd.conf
   nfs-common: config/nfs-common
   nfs_mounter_ctl.erb: bin/nfs_mounter_ctl
+  pre-start.sh.erb: bin/pre-start
 
 packages:
   - common
+  - nfs-debs
 
 consumes:
 - name: gitlab_nfs

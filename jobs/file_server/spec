@@ -8,9 +8,11 @@ templates:
   rpc_mountd_ctl: bin/rpc_mountd_ctl
   exports.erb: config/exports
   idmapd.conf.erb: config/idmapd.conf
+  pre-start.sh.erb: bin/pre-start
 
 packages:
   - common
+  - nfs-server-debs
   - debian_nfs_server
 
 provides:
