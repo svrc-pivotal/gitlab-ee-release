@@ -17,7 +17,7 @@ install_if_missing ()
 }
 
 codename=$(lsb_release -c | grep xenial | awk '{print $2}')
-if [ "$codename" == "xenial" ]; then
+if [ ! -z "$codename" ] || [ "$codename" == "xenial" ]; then
     echo "Installing NFS packages"
     (
     flock -x 200
@@ -30,10 +30,10 @@ if [ "$codename" == "xenial" ]; then
     ) 200>/var/vcap/data/dpkg.lock
 fi
 codename=$(lsb_release -c | grep trusty | awk '{print $2}')
-if [ "$codename" == "trusty" ]; then
+if [ ! -z "$codename" ] || [ "$codename" == "trusty" ]; then
     echo "Installing NFS packages"
     (
     flock -x 200
-    install_if_missing nfs-kernel-server /var/vcap/packages/nfs_kernel_server/nfs-kernel-server_1.2.5-3ubuntu3_amd64.deb
+    install_if_missing nfs-kernel-server /var/vcap/packages/debian_nfs_server/nfs-kernel-server_1.2.8-6ubuntu1.2_amd64.deb
     ) 200>/var/vcap/data/dpkg.lock
 fi

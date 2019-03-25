@@ -14,6 +14,7 @@ packages:
   - common
   - nfs-server-debs
   - debian_nfs_server
+  - nfs-debs
 
 provides:
 - name: gitlab_nfs

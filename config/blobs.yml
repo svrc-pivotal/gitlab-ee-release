@@ -1,7 +1,7 @@
-debian_nfs_server/nfs-kernel-server_1.2.5-3ubuntu3_amd64.deb:
-  size: 124348
-  object_id: 6bbb5b7a-4501-4afa-9a70-7e6dd2c92be2
-  sha: 65457bbeda336dc4b710cd68f71e9dd218fdf594
+debian_nfs_server/nfs-kernel-server_1.2.8-6ubuntu1.2_amd64.deb:
+  size: 85826
+  object_id: cc6a7832-d310-46de-4e72-7684bd1790ba
+  sha: 1ef96876212fb4ce6e3ebb3e18d9ec2d2d9ceb48
 gitlab-ee-omnibus/trusty/gitlab-ee_10.8.7-ee.0_amd64.deb:
   size: 478214494
   object_id: ea430ab2-e28b-4e25-56fc-e07e619ec8fc
