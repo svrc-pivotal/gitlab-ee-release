@@ -17,7 +17,7 @@ install_if_missing ()
 }
 
 codename=$(lsb_release -c | grep xenial | awk '{print $2}')
-if [ "$codename" == "xenial" ]; then
+if [ ! -z "$codename" ] || [ "$codename" == "xenial" ]; then
     echo "Installing NFS packages"
     (
     flock -x 200
