@@ -4,11 +4,11 @@ set -o pipefail
 
 # extract debian archive and then
 codename=$(lsb_release -c | grep xenial | awk '{print $2}')
-if [ "$codename" == "xenial" ]; then
+if [ ! -z "$codename" ] ||  [ "$codename" == "xenial" ]; then
   dpkg -x gitlab-ee-omnibus/xenial/gitlab-ee_10.8.7-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 fi
 codename=$(lsb_release -c | grep trusty | awk '{print $2}')
-if [ "$codename" == "trusty" ]; then
+if [ ! -z "$codename" ] || [ "$codename" == "trusty" ]; then
   dpkg -x gitlab-ee-omnibus/trusty/gitlab-ee_10.8.7-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 fi
 
