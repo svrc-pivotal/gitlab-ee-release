@@ -1,6 +1,5 @@
 # abort script on any command that exits with a non zero value
-set -xe
-set -o pipefail
+set -x
 
 # extract debian archive and then
 codename=$(lsb_release -c | grep xenial | awk '{print $2}')
@@ -11,6 +10,8 @@ codename=$(lsb_release -c | grep trusty | awk '{print $2}')
 if [ ! -z "$codename" ] || [ "$codename" == "trusty" ]; then
   dpkg -x gitlab-ee-omnibus/trusty/gitlab-ee_10.8.7-ee.0_amd64.deb "${BOSH_INSTALL_TARGET}"
 fi
+
+set -eo pipefail
 
 # this patch is required for gitlab-shell to properly create authorized_keys
 # otherwise the authorized_keys gitlab-shell command points to /var/vcap/data/packages/gitlab-ee-omnibus/...,
