@@ -12,3 +12,6 @@ mkdir -p $LOG_DIR
 
 # Fix sys and log permissions
 chmod o+x /var/vcap/sys /var/vcap/sys/log
+chown -R git:git /var/vcap/data/packages/gitlab-ee-omnibus
+chown -R git:git /var/vcap/data/jobs/gitlab-ee
+
